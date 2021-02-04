@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Validating Response Structure using XSD -->
+
+	<getCourseDetailsResponse
+		xmlns="http://www.example.org/course-details"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.example.org/course-details course-details.xsd">
+		<CourseDetails>
+			<id>123</id>
+			<name>Spring Soap Web Services</name>
+			<description>Soap Web Services Tutorial</description>
+		</CourseDetails>
+	</getCourseDetailsResponse>

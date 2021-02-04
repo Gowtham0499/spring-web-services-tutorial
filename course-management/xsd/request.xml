@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Validating Request Structure using XSD -->
+
+	<getCourseDetailsRequest
+		xmlns="http://www.example.org/course-details"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.example.org/course-details course-details.xsd">
+		<id>123</id>
+	</getCourseDetailsRequest>
