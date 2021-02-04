@@ -16,7 +16,9 @@ import com.app.management.course.course_details.GetAllCoursesResponse;
 import com.app.management.course.course_details.GetCourseDetailsRequest;
 import com.app.management.course.course_details.GetCourseDetailsResponse;
 import com.course.management.app.bean.Course;
+import com.course.management.app.exceptions.CourseNotFoundException;
 import com.course.management.app.service.CourseDetailsService;
+import com.course.management.app.service.CourseDetailsService.Status;
 
 @Endpoint
 public class CourseDetailsEndpoint {
@@ -28,6 +30,9 @@ public class CourseDetailsEndpoint {
 	@ResponsePayload
 	public GetCourseDetailsResponse processGetCourseDetailsRequest(@RequestPayload GetCourseDetailsRequest request) {
 		Course course = service.findById(request.getId());
+		if(course==null) {
+			throw new CourseNotFoundException("Course not found for id -> " + request.getId());
+		}
 		return mapCourseDetails(course);
 	}
 	
@@ -41,10 +46,16 @@ public class CourseDetailsEndpoint {
 	@PayloadRoot(namespace = "http://course.management.app.com/course-details", localPart = "deleteCourseRequest")
 	@ResponsePayload
 	public DeleteCourseResponse processDeleteCoursesRequest(@RequestPayload DeleteCourseRequest request) {
-		int status = service.deleteById(request.getId());
+		Status status = service.deleteById(request.getId());
 		DeleteCourseResponse response = new DeleteCourseResponse();
-		response.setStatus(status);
+		response.setStatus(mapStatus(status));
 		return response;		
+	}
+
+	private com.app.management.course.course_details.Status mapStatus(Status status) {
+		if(status==Status.FAILURE)
+			return com.app.management.course.course_details.Status.FAILURE;
+		return com.app.management.course.course_details.Status.SUCCESS;
 	}
 
 	private GetCourseDetailsResponse mapCourseDetails(Course course) {
