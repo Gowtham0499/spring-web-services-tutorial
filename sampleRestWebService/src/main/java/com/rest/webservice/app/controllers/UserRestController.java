@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.rest.webservice.app.entities.User;
+import com.rest.webservice.app.exceptions.UserNotFoundException;
 import com.rest.webservice.app.services.UserDaoService;
 
 @RestController
@@ -29,7 +30,11 @@ public class UserRestController {
 	
 	@GetMapping("/users/{id}")
 	public User retrieveUser(@PathVariable int id) {
-		return userService.findById(id);
+		User user = userService.findById(id);
+		if(user == null) {
+			throw new UserNotFoundException("User not found for id -> " + id);
+		}
+		return user;
 	}
 	
 	@PostMapping("/users")
@@ -41,7 +46,10 @@ public class UserRestController {
 	
 	@DeleteMapping("/users/{id}")
 	public void deleteUser(@PathVariable int id) {
-		userService.deleteById(id);
+		User user = userService.deleteById(id);
+		if(user == null) {
+			throw new UserNotFoundException("User not found for id -> " + id);
+		}
 	}
 
 }
