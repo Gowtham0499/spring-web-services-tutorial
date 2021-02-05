@@ -6,6 +6,10 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,35 +25,41 @@ import com.rest.webservice.app.services.UserDaoService;
 
 @RestController
 public class UserRestController {
-	
+
 	@Autowired
 	UserDaoService userService;
-	
+
 	@GetMapping("/users")
 	public List<User> retrieveAllUsers() {
 		return userService.findAll();
 	}
-	
+
 	@GetMapping("/users/{id}")
-	public User retrieveUser(@PathVariable int id) {
+	public EntityModel<User> retrieveUser(@PathVariable int id) {
 		User user = userService.findById(id);
-		if(user == null) {
+		if (user == null) {
 			throw new UserNotFoundException("User not found for id -> " + id);
 		}
-		return user;
+
+		// methodOn and linkTo are static imports from WebMvcLinkBuilder class
+		EntityModel<User> resource = EntityModel.of(user);
+		WebMvcLinkBuilder linkTo = linkTo(methodOn(this.getClass()).retrieveAllUsers());
+		resource.add(linkTo.withRel("all-users"));
+
+		return resource;
 	}
-	
+
 	@PostMapping("/users")
 	public ResponseEntity<User> saveUser(@Valid @RequestBody User user) {
 		User savedUser = userService.save(user);
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedUser.getId()).toUri();
 		return ResponseEntity.created(location).build();
 	}
-	
+
 	@DeleteMapping("/users/{id}")
 	public void deleteUser(@PathVariable int id) {
 		User user = userService.deleteById(id);
-		if(user == null) {
+		if (user == null) {
 			throw new UserNotFoundException("User not found for id -> " + id);
 		}
 	}
