@@ -16,8 +16,9 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class SwaggerConfiguration {
 
 	public static final Contact DEFAULT_CONTACT = new Contact("Gowtham", "", "gowth0499@gmail.com");
-	public static final ApiInfo DEFAULT_API_INFO = new ApiInfo("Awesome Api Documentation", "Sample Swagger Api Documentation", "1.0", "urn:tos",
-			DEFAULT_CONTACT, "Apache 2.0", "http://www.apache.org/licenses/LICENSE-2.0", new ArrayList<>());
+	public static final ApiInfo DEFAULT_API_INFO = new ApiInfo("Awesome Api Documentation",
+			"Sample Swagger Api Documentation", "1.0", "urn:tos", DEFAULT_CONTACT, "Apache 2.0",
+			"http://www.apache.org/licenses/LICENSE-2.0", new ArrayList<>());
 
 	@Bean
 	public Docket api() {
